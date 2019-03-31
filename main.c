@@ -2,14 +2,16 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include "libft.h"
 
-int check_correct(int fd);
+int read_file(int fd);
 
 int main(void)
 {
   int fd;
 
   fd = open("test.txt", O_RDONLY);
-  printf("%d\n", check_correct(fd));
+  if (read_file(fd) == 1)
+    printf("everythink ok!");
 	return (0);
 }
