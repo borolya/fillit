@@ -1,5 +1,6 @@
 #include "fillit.h"
 
+/*
 void print_map(t_map *map)
 {
   int i;
@@ -119,8 +120,9 @@ t_map *new_map(int size)//if return NULL?  //if size <= 0 ?
 
 void del_tetra(t_tetris *tetra, int tetra_size)//tetra_size
 {
-  i = 0;
+  int i;
 
+  i = 0;
   while (i < tetra->height)
   {
     free(tetra->pos[i])
@@ -130,7 +132,7 @@ void del_tetra(t_tetris *tetra, int tetra_size)//tetra_size
   free(tetra);
   //?tetra_size = 0;
 }
-
+*/
 int main(int ac, char **av)
 {
   t_map *map;
@@ -139,15 +141,37 @@ int main(int ac, char **av)
   int size;
   int count;
 
+  int i;
+  t_tetris *tetra;
+  count = 0;
+
   start = NULL;
   if (ac == 2)//if ac != 2 ?
-    fd = open(av[1], R_ONLY);
+    fd = open(av[1], O_RDONLY);
+
   if (read_file(fd, &count, &start) != 1)
   {
     ft_putstr("error\n");
-    ft_lstdel(&start, &del_tetra);
-    exit(1);
+    //ft_lstdel(&start, &del_tetra);
+  //  exit(1);
   }
+
+
+/*
+  while (start)
+  {
+    i = 0;
+    tetra = start->content;
+    while (i < tetra->height)
+    {
+      ft_putstr(tetra->pos[i]);
+      ft_putstr("\n");
+      i++;
+    }
+    start = start->next;
+  }
+*/
+/*
   size = 2 * sqrt_top(count); //who we will find count?
   map = new_map(size);
   while (!solve(map, start))
@@ -156,5 +180,6 @@ int main(int ac, char **av)
     map = new_map(size++);
   }
   print_map(map);
+  */
   return (0);
 }
