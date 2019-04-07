@@ -1,4 +1,3 @@
-
 #include <unistd.h>
 #include <stdio.h>
 #include "libft.h"
@@ -28,7 +27,7 @@ int chech_tetr(int fd, char **str) //-1 error, 0 not read, 1 ok and pake str
 	int i;
 
 	res = read(fd, buff, 19);
-	buff[20] = '\0';
+	buff[19] = '\0';
 	//printf("buff = |%s|\n", buff);
 	if (res == 0)
 		return (0);
@@ -58,33 +57,32 @@ int chech_tetr(int fd, char **str) //-1 error, 0 not read, 1 ok and pake str
 	return (1);
 }
 
+/*
+	we can add this function in libft
+*/
+int count_elem_in_list(t_list *start)
+{
+	int i;
 
-int read_file(int fd)//1 ok, -1, ko
+	i = 0;
+	while (start)
+	{
+		start = start->next;
+		i++;
+	}
+	return (i);
+}
+
+t_list *read_file(int fd, int *count_elem_in_list, t_list **start)//1 ok, -1, ko//if(count == 0) - error
 {
 	char c;
 	int res;
 	char *str;
 
 	str = NULL;
-	if (fd < 0)
+	if (fd < 0 || !start)
 		return (-1);
-	if (chech_tetr(fd, &str) < 1)
-		return (-1);
-	printf("%s\n", str);
-	res = read(fd, &c, 1);
-
-	if ((res == 1 && c != '\n') || res < 0)
-		return (-1);
-	else if (res == 0)
-		return (1);
-	res = read(fd, &c, 1);
-	if ((res == 1 && c != '\n') || res < 0)
-		return (-1);
-	else if (res == 0)
-		return (1);
-	res = chech_tetr(fd, &str);
-	printf("%s\n", str);
-	while (res == 1)
+	while (chech_tetr(fd, &str))
 	{
 		res = read(fd, &c, 1);
 		if ((res == 1 && c != '\n') || res < 0)
@@ -96,10 +94,12 @@ int read_file(int fd)//1 ok, -1, ko
 			return (-1);
 		else if (res == 0)
 			return (1);
-		res = chech_tetr(fd, &str);
+		//start = add in list(start, str);
 		printf("%s\n", str);
 	}
-	if (res == 0)
-		return (1);
+	*count_elem_in_list = count_elem_in_list(start);
+	if (res == 0 && count_elem_in_list > 0)
+		return (start);
+	//free_lst(start);
 	return (-1);
 }

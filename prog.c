@@ -117,16 +117,37 @@ t_map *new_map(int size)//if return NULL?  //if size <= 0 ?
   return (map);
 }
 
+void del_tetra(t_tetris *tetra, int tetra_size)//tetra_size
+{
+  i = 0;
+
+  while (i < tetra->height)
+  {
+    free(tetra->pos[i])
+    i++;
+  }
+  free(tetra->pos);
+  free(tetra);
+  //?tetra_size = 0;
+}
+
 int main(int ac, char **av)
 {
   t_map *map;
   t_list *start;
   int fd;
   int size;
+  int count;
 
+  start = NULL;
   if (ac == 2)//if ac != 2 ?
     fd = open(av[1], R_ONLY);
-  start = read(fd);
+  if (read_file(fd, &count, &start) != 1)
+  {
+    ft_putstr("error\n");
+    ft_lstdel(&start, &del_tetra);
+    exit(1);
+  }
   size = 2 * sqrt_top(count); //who we will find count?
   map = new_map(size);
   while (!solve(map, start))
