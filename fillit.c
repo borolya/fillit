@@ -1,6 +1,7 @@
-#include "libft/libft.h"
+#include "libft.h"
 //#include "filit.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 typedef struct s_point
 {
@@ -38,6 +39,39 @@ t_tetris *new_tetra(char **pos, int width, int height, char value)
   return (tetra);
 }
 
+t_list *ft_lstnew(void const *content, size_t content_size)
+{
+	t_list *elem;
+	elem = (t_list*)ft_memalloc(sizeof(t_list));
+	if (elem == NULL)
+		return (NULL);
+	if (content == NULL)
+	{
+		content_size = 0;
+		elem->next = NULL;
+	}
+	else
+	{
+		elem->content = ft_memalloc(content_size);
+		if (elem->content == NULL)
+		{
+			ft_memdel((void **)&elem);
+			return (NULL);
+		}
+		ft_memcpy(elem->content, content, content_size);
+	}
+	elem->content_size = content_size;
+	elem->next = NULL;
+	return (elem);
+}
+
+void ft_lstadd(t_list **alst, t_list *new)
+{
+	new->next = *alst;
+	*alst = new;
+}
+
+
 void ft_findminmax(char *str, t_point *min, t_point *max)
 {
   int i;
@@ -69,6 +103,7 @@ int   main()
   int       i;
   char      *str;
   char      value;
+  t_list	*start;
 
   value = 'A';
   i = 0;
@@ -96,6 +131,8 @@ int   main()
   printf("Pos 0 = %s\n", pos[0]);
   printf("Pos 1 = %s\n", pos[1]);
   printf("Pos 2 = %s\n", pos[2]);
+
+  ft_lstadd(&start, ft_lstnew(tetra, sizeof(t_tetris)));
 
   //printf("%s\n", f[0]);
   return (0);

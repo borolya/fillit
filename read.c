@@ -78,7 +78,10 @@ t_list *read_file(int fd, int *count_elem_in_list, t_list **start)//1 ok, -1, ko
 	char c;
 	int res;
 	char *str;
+	char value;
+	t_tetris  *tetra;
 
+	value = 'A';
 	str = NULL;
 	if (fd < 0 || !start)
 		return (-1);
@@ -94,12 +97,14 @@ t_list *read_file(int fd, int *count_elem_in_list, t_list **start)//1 ok, -1, ko
 			return (-1);
 		else if (res == 0)
 			return (1);
-		//start = add in list(start, str);
+		tetra = get_piece(str, value);
+		ft_lstadd(&start, ft_lstnew(tetra, sizeof(t_tetris)));
 		printf("%s\n", str);
 	}
 	*count_elem_in_list = count_elem_in_list(start);
 	if (res == 0 && count_elem_in_list > 0)
 		return (start);
+
 	//free_lst(start);
 	return (-1);
 }
