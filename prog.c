@@ -1,6 +1,7 @@
+
 #include "fillit.h"
 
-/*
+
 void print_map(t_map *map)
 {
   int i;
@@ -45,7 +46,7 @@ void change_map(t_map *map, t_tetris *tetr, int p, int q, char c)
     j = 0;
     while (j < tetr->width)
     {
-        if (tetr->pos[i][j] == #)
+        if (tetr->pos[i][j] == '#')
           (map->array)[p + i][q + j] = c;
         j++;
     }
@@ -117,7 +118,7 @@ t_map *new_map(int size)//if return NULL?  //if size <= 0 ?
   map->size = size;
   return (map);
 }
-
+/*
 void del_tetra(t_tetris *tetra, int tetra_size)//tetra_size
 {
   int i;
@@ -133,6 +134,9 @@ void del_tetra(t_tetris *tetra, int tetra_size)//tetra_size
   //?tetra_size = 0;
 }
 */
+
+
+
 int main(int ac, char **av)
 {
   t_map *map;
@@ -140,28 +144,26 @@ int main(int ac, char **av)
   int fd;
   int size;
   int count;
-
   int i;
   t_tetris *tetra;
+
   count = 0;
-
   start = NULL;
-  if (ac == 2)//if ac != 2 ?
-    fd = open(av[1], O_RDONLY);
-
+   fd = open("test.txt", O_RDONLY);
   if (read_file(fd, &count, &start) != 1)
   {
     ft_putstr("error\n");
+    return (0);
     //ft_lstdel(&start, &del_tetra);
   //  exit(1);
   }
 
-
-/*
-  while (start)
+//chaeck adding in list
+ /* while (start)
   {
     i = 0;
     tetra = start->content;
+    ft_putstr("in main\n");
     while (i < tetra->height)
     {
       ft_putstr(tetra->pos[i]);
@@ -171,15 +173,15 @@ int main(int ac, char **av)
     start = start->next;
   }
 */
-/*
   size = 2 * sqrt_top(count); //who we will find count?
+  printf("count = %d", count );
   map = new_map(size);
+ // print_map(map);
   while (!solve(map, start))
   {
-    free_map(map);
+    //free_map(map);
     map = new_map(size++);
   }
   print_map(map);
-  */
   return (0);
 }

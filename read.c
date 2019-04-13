@@ -29,7 +29,7 @@ int chech_tetr(int fd, char **str) //-1 error, 0 not read, 1 ok and pake str
 
 	res = read(fd, buff, 19);
 	buff[19] = '\0';
-	printf("buff = |%s|\n", buff);
+//	printf("buff = |%s|\n", buff);
 	if (res == 0)
 		return (0);
 	else if (res < 19)
@@ -86,36 +86,26 @@ int read_file(int fd, int *count_elem_in_list, t_list **start)//1 ok, -1, ko//if
 	value = 'A';
 	str = NULL;
 	if (fd < 0 || !start)
+	{
+		printf("fd < 0 || !start");
 		return (-1);
+	}
 	while (chech_tetr(fd, &str))
 	{
+		(*count_elem_in_list)++;
+		ft_lstadd(start, ft_lstnew(get_piece(str, value), sizeof(t_tetris)));
 		res = read(fd, &c, 1);
 		if ((res == 1 && c != '\n') || res < 0)
-		{
-			printf("res = %d c = %c", res, c);
-			ft_putstr("Doesnt work1\n");
 			return (-1);
-		}
 		else if (res == 0)
-		{
-			ft_putstr("Work1\n");
 			return (1);
-		}
-
+		res = read(fd, &c, 1);
 		if ((res == 1 && c != '\n') || res < 0)
-		{
-			ft_putstr("Doesnt work2\n");
 			return (-1);
-		}
 		else if (res == 0)
-		{
-			ft_putstr("Work2\n");
 			return (1);
-		}
-		ft_lstadd(start, ft_lstnew(get_piece(str, value), sizeof(t_tetris)));
 	//	printf("%s\n", str);
 	}
-	*count_elem_in_list = count_elem(*start);
 	if (res == 0 && count_elem_in_list > 0)
 		return (1);
 

@@ -29,8 +29,6 @@ int chech_tetr(int res, char buf[]) //-1 error, 0 not read, 1 ok and pake str
 	count = 0;
 	link = 0;
 
-	if (res == 0)
-		return (0);
 	if (buf[4] != '\n' || buf[9] != '\n' || buf[14] != '\n' || buf[19] != '\n'
 											|| buf[20] != '\n')
 		return (-1);
@@ -55,6 +53,7 @@ int chech_tetr(int res, char buf[]) //-1 error, 0 not read, 1 ok and pake str
 /*
 	we can add this function in libft
 */
+/*
 int count_elem(t_list *start)
 {
 	int i;
@@ -67,45 +66,42 @@ int count_elem(t_list *start)
 	}
 	return (i);
 }
-
-int read_file(int fd, int *count_elem_in_list, t_list **start)//1 ok, -1, ko//if(count == 0) - error
+*/
+int read_file(int fd, int *tetra_count, t_list **start)//1 ok, -1, ko//if(count == 0) - error
 {
 	int res;
 	char buf[22];
 	char value;
-	int tetra_count;
-	t_tetris  *tetra;
+		t_tetris  *tetra;
 	int i; // потом удалить
-
+	
 	i = 0;
-	tetra_count = 0;
-	value = 'A';
+		value = 'A';
 	if (fd < 0 || !start)
 		return (-1);
-	//printf("Work here\n");
-	while ((res = read(fd, buf, 21)) >= 20)
+		while ((res = read(fd, buf, 21)) >= 20)
 	{
 		buf[21] = '\0';
 		if (chech_tetr(res, buf) == 1)
 		{
 			tetra_count++;
+			printf("tetr = %d", *tetra_count);
 			tetra =  get_piece(buf, value++); //
 			while(i < tetra->height) // потом удалить это для проверки
 			{
-				printf("Tetra %d pos[%d] = %s \n", tetra_count, i, tetra->pos[i]); //
+				printf("Tetra %d pos[%d] = %s \n", *tetra_count, i, tetra->pos[i]); //
 				i++;
 			}
 		}
 		else
+		{
+			ft_putstr("tyty");
 			return(-1);
-		printf("\n");
+		}
 		i = 0; // потом удалить
 		ft_lstadd(start, ft_lstnew(tetra, sizeof(t_tetris)));
 	}
-	//	printf("%s\n", str);
-	//printf("Work here `!`\n");
-	*count_elem_in_list = count_elem(*start);
-	if (res == 0 && count_elem_in_list > 0)
+	if (res == 0 && tetra_count > 0)
 		return (1);
 
 	//free_lst(start);
