@@ -1,6 +1,4 @@
-
 #include "fillit.h"
-
 
 void print_map(t_map *map)
 {
@@ -72,8 +70,14 @@ int solve(t_map *map, t_list *list)
       if (check_capacity(map, tetr, i, j) == 1)
       {
           change_map(map, tetr, i, j, tetr->value);
+        //  print_map(map);
+         // ft_putstr("\n");
           if (solve(map, list->next) == 0)
+          {
             change_map(map, tetr, i, j, '.');
+         // print_map(map);
+          //ft_putstr("\n");
+          }
           else
             return (1);
       }
@@ -90,7 +94,7 @@ int sqrt_top(int nb)
 	int sqrt;
 
 	sqrt = 0;
-	while (sqrt*sqrt < nb)
+	while (sqrt * sqrt < nb)
 		sqrt++;
 	return (sqrt);
 }
@@ -118,24 +122,56 @@ t_map *new_map(int size)//if return NULL?  //if size <= 0 ?
   map->size = size;
   return (map);
 }
+
 /*
-void del_tetra(t_tetris *tetra, int tetra_size)//tetra_size
+void del_tetra(void *tetra, size_t tetra_size)//tetra_size
 {
   int i;
 
   i = 0;
-  while (i < tetra->height)
+  while (i < (t_tetris*)tetra->height)
   {
-    free(tetra->pos[i])
+    free((t_tetris*)tetra->pos[i]);
     i++;
   }
-  free(tetra->pos);
-  free(tetra);
+  free((t_tetris*)tetra->pos);
+  free(t_tetris*)(tetra);
   //?tetra_size = 0;
 }
 */
 
+void free_lst(t_list *alst)
+{
+  int i;
+  t_tetris *tetr;
+  t_list *tmp;
 
+  while(alst)
+  {
+    tetr = (t_tetris*)alst->content;
+    i = 0;
+    while(i < tetr->height)
+    {
+      free(tetr->pos[i]);
+      i++;
+    }
+    free(tetr->pos);
+    free(tetr);
+    tmp = alst->next;
+    free(alst);
+    alst = tmp;
+  }
+}
+
+void free_map(t_map *map)
+{
+  int i;
+
+  i = -1;
+  while(++i < map->size)
+    free(map->array[i]);
+  free(map->array);
+}
 
 int main(int ac, char **av)
 {
@@ -149,39 +185,29 @@ int main(int ac, char **av)
 
   count = 0;
   start = NULL;
-   fd = open("test.txt", O_RDONLY);
-  if (read_file(fd, &count, &start) != 1)
+ // printf("ac = %d", ac);
+  if (ac != 2)
   {
     ft_putstr("error\n");
     return (0);
-    //ft_lstdel(&start, &del_tetra);
-  //  exit(1);
   }
-
-//chaeck adding in list
- /* while (start)
+  fd = open(av[1], O_RDONLY);
+  if (read_file(fd, &count, &start) != 1)
   {
-    i = 0;
-    tetra = start->content;
-    ft_putstr("in main\n");
-    while (i < tetra->height)
-    {
-      ft_putstr(tetra->pos[i]);
-      ft_putstr("\n");
-      i++;
-    }
-    start = start->next;
+    ft_putstr("error\n");
+   // free_lst(start);
+    exit(1);
   }
-*/
-  size = 2 * sqrt_top(count); //who we will find count?
-  printf("count = %d", count );
+  size = sqrt_top(count * 4); //who we will find count?
   map = new_map(size);
- // print_map(map);
   while (!solve(map, start))
   {
-    //free_map(map);
+    free_map(map);
     map = new_map(size++);
   }
   print_map(map);
+  //free_lst(start);
+  //free_map(map);
+  close(fd);
   return (0);
 }
