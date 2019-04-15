@@ -44,38 +44,27 @@ t_point *point_new(int x, int y)
   point->y = y;
   return (point);
 }
-#include <stdio.h>
+
 t_tetris *get_piece(char *str, char value)
 {
 	t_tetris  *tetra;
 	t_point   *min;
-    t_point   *max;
+  t_point   *max;
 	char      **pos;
 	int       i;
 
 	min = point_new(3,3);
     max = point_new(0,0);
     ft_findminmax(str, min, max);
-  //  printf("max = %d\n", max->x);
-
 	pos = ft_memalloc(sizeof(char**) * (max->y - min->y) + 1);
   i = 0;
     while (i < max->y - min->y + 1)
     {
       pos[i] = ft_strnew(max->x - min->x + 1);
       pos[i] = ft_strncpy(pos[i], str + min->x + (min->y + i) * 5, max->x - min->x + 1);
-    //  printf("i = %d, |%s|\n", i, pos[i]);
       i++;
     }
     tetra = new_tetra(pos, max->x - min->x + 1, max->y - min->y + 1, value);
-  /*  i = 0;
-    while (i < tetra->height)
-    {
-      ft_putstr(tetra->pos[i]);
-      ft_putstr("\n");
-      i++;
-    }
-    */
     ft_memdel((void **)&min);
     ft_memdel((void **)&max);
 	return (tetra);

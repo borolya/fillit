@@ -70,13 +70,9 @@ int solve(t_map *map, t_list *list)
       if (check_capacity(map, tetr, i, j) == 1)
       {
           change_map(map, tetr, i, j, tetr->value);
-        //  print_map(map);
-         // ft_putstr("\n");
           if (solve(map, list->next) == 0)
           {
             change_map(map, tetr, i, j, '.');
-         // print_map(map);
-          //ft_putstr("\n");
           }
           else
             return (1);
@@ -140,38 +136,7 @@ void del_tetra(void *tetra, size_t tetra_size)//tetra_size
 }
 */
 
-void free_lst(t_list *alst)
-{
-  int i;
-  t_tetris *tetr;
-  t_list *tmp;
 
-  while(alst)
-  {
-    tetr = (t_tetris*)alst->content;
-    i = 0;
-    while(i < tetr->height)
-    {
-      free(tetr->pos[i]);
-      i++;
-    }
-    free(tetr->pos);
-    free(tetr);
-    tmp = alst->next;
-    free(alst);
-    alst = tmp;
-  }
-}
-
-void free_map(t_map *map)
-{
-  int i;
-
-  i = -1;
-  while(++i < map->size)
-    free(map->array[i]);
-  free(map->array);
-}
 
 int main(int ac, char **av)
 {
@@ -180,8 +145,6 @@ int main(int ac, char **av)
   int fd;
   int size;
   int count;
-  int i;
-  t_tetris *tetra;
 
   count = 0;
   start = NULL;
@@ -195,19 +158,19 @@ int main(int ac, char **av)
   if (read_file(fd, &count, &start) != 1)
   {
     ft_putstr("error\n");
-   // free_lst(start);
+    free_lst(&start);
     exit(1);
   }
   size = sqrt_top(count * 4); //who we will find count?
   map = new_map(size);
   while (!solve(map, start))
   {
-    free_map(map);
+    free_map(&map);
     map = new_map(size++);
   }
   print_map(map);
-  //free_lst(start);
-  //free_map(map);
+  free_lst(&start);
+  free_map(&map);
   close(fd);
   return (0);
 }
