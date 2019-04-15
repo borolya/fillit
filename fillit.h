@@ -39,7 +39,9 @@ typedef struct s_map
   char **array;
 } t_map;
 
-
+void free_tetra(t_tetris **tetr);
+void free_lst(t_list **alst);
+void free_map(t_map **map);
 t_tetris 	*get_piece(char *str, char value);
 int read_file(int fd, int *count_elem_in_list, t_list **start);
 //void		ft_lstadd(t_list **alst, t_list *new);
